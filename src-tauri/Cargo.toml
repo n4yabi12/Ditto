@@ -1,0 +1,33 @@
+[package]
+name = "ditto"
+version = "0.1.0"
+description = "Duplicate photo finder"
+authors = ["Nyabi"]
+edition = "2021"
+
+[lib]
+name = "ditto_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+tauri-plugin-opener = "2"
+tauri-plugin-dialog = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+image = { version = "0.25", default-features = false, features = ["jpeg", "png", "webp", "tiff", "bmp", "gif"] }
+walkdir = "2"
+rayon = "1"
+base64 = "0.22"
+tokio = { version = "1", features = ["rt-multi-thread"] }
+trash = "5.2.5"
+rawler = "0.7.2"
+
+[profile.release]
+lto = true           # Link-time optimisation — inlines across crates (big win for rayon/image)
+codegen-units = 1    # Single codegen unit maximises inlining and cross-function optimisation
+opt-level = 3        # Maximum optimisation
+strip = true         # Strip debug symbols → smaller binary, faster load
