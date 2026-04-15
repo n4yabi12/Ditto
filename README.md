@@ -28,8 +28,9 @@ RAW files are displayed using their embedded JPEG preview, which preserves origi
 - Side-by-side image comparison modal
 - Auto-select duplicates, keeping the best-resolution image per group
 - Sort images within groups by date, resolution, file size, or name
+- Multi-language support — English, 한국어, 日本語, 简体中文, 繁體中文
 - Move to Trash or permanently delete selected files
-- Reveal any file in Finder / Explorer
+- Reveal any file in Finder / Explorer / Files
 - Drag-and-drop folder selection
 - Keyboard shortcuts (⌘A / Ctrl+A to auto-select all, ⌘D / Ctrl+D to clear, Delete/Backspace to delete)
 - Dark mode support
@@ -94,7 +95,7 @@ npm run tauri build
 ```
 
 The compiled application will be in `src-tauri/target/release/`.
-Installers (`.dmg` on macOS, `.msi` / `.exe` on Windows) are placed in `src-tauri/target/release/bundle/`.
+Installers (`.dmg` on macOS, `.exe` on Windows, `.AppImage` on Linux) are placed in `src-tauri/target/release/bundle/`.
 
 ---
 
@@ -121,6 +122,7 @@ src/
 │   └── +page.svelte                # Route shell + global event handlers
 └── lib/
     ├── utils.js                    # fmt, fmtDate, basename utilities
+    ├── i18n.svelte.js              # Multi-language support (5 locales)
     ├── stores/
     │   └── scan.svelte.js          # AppState class (all reactive state & actions)
     └── components/
