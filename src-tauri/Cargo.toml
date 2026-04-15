@@ -1,6 +1,6 @@
 [package]
 name = "ditto"
-version = "0.1.0"
+version = "0.1.1"
 description = "Duplicate photo finder"
 authors = ["Nyabi"]
 edition = "2021"

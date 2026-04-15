@@ -1,6 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { open } from "@tauri-apps/plugin-dialog";
 import { basename } from "$lib/utils.js";
+import { t } from "$lib/i18n.svelte.js";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -13,23 +14,24 @@ import { basename } from "$lib/utils.js";
 
 // ── Sensitivity labels ────────────────────────────────────────────────────────
 
-/** @type {Record<number, { label: string, desc: string }>} */
-export const SENSITIVITY_LABELS = {
-  1:  { label: "Strictest", desc: "Only detects images that are nearly pixel-perfect copies. Catches file duplicates and identical exports only." },
-  3:  { label: "Strict",    desc: "Detects images that are nearly identical, ignoring minor compression or subtle editing differences." },
-  5:  { label: "Balanced",  desc: "Also catches images with slight brightness, color, or minor crop differences. Recommended for most use cases." },
-  8:  { label: "Loose",     desc: "Groups similar scenes shot in burst mode or the same image saved at different resolutions." },
-  12: { label: "Loosest",   desc: "Groups broadly similar subjects or scenes. Expect a higher rate of false positives." },
+/** @type {Record<number, { labelKey: string, descKey: string }>} */
+export const SENSITIVITY_KEYS = {
+  1:  { labelKey: "sens_strictest", descKey: "sens_strictest_desc" },
+  3:  { labelKey: "sens_strict",    descKey: "sens_strict_desc" },
+  5:  { labelKey: "sens_balanced",  descKey: "sens_balanced_desc" },
+  8:  { labelKey: "sens_loose",     descKey: "sens_loose_desc" },
+  12: { labelKey: "sens_loosest",   descKey: "sens_loosest_desc" },
 };
 
 /** @param {number} val */
 export function getSensitivityInfo(val) {
-  const keys = Object.keys(SENSITIVITY_LABELS).map(Number).sort((a, b) => a - b);
+  const keys = Object.keys(SENSITIVITY_KEYS).map(Number).sort((a, b) => a - b);
   let best = keys[0];
   for (const k of keys) {
     if (val >= k) best = k;
   }
-  return SENSITIVITY_LABELS[best];
+  const entry = SENSITIVITY_KEYS[best];
+  return { label: t(entry.labelKey), desc: t(entry.descKey) };
 }
 
 // ── AppState ──────────────────────────────────────────────────────────────────
@@ -142,10 +144,10 @@ class AppState {
         this.selectedFolder = path;
         this.error = "";
       } else {
-        this.error = "Dropped item is not a folder. Please drop a folder.";
+        this.error = t("err_not_folder");
       }
     } catch {
-      this.error = "Could not validate the dropped folder.";
+      this.error = t("err_validate_folder");
     }
   }
 
@@ -160,7 +162,7 @@ class AppState {
     this.selections = {};
     this.thumbnails = {};
     this.view = "scanning";
-    this.scanProgress = { current: 0, total: 0, phase: "Starting..." };
+    this.scanProgress = { current: 0, total: 0, phase: "" };
     try {
       const result = /** @type {DuplicateGroup[]} */ (await invoke("scan_directory", {
         path: this.selectedFolder,
@@ -265,9 +267,8 @@ class AppState {
       );
       const deletedPaths = result.deleted;
       if (result.failed.length > 0) {
-        // Error messages from Rust are already user-friendly (e.g. "Permission denied").
         const reason = result.failed[0][1];
-        this.error = `Could not move ${result.failed.length} file(s) to trash: ${reason}`;
+        this.error = `${result.failed.length} file(s): ${reason}`;
       }
       const deleted = new Set(deletedPaths);
       this.groups = this.groups
@@ -280,7 +281,7 @@ class AppState {
       }
       this.selections = newSel;
     } catch (e) {
-      this.error = "Failed to move files to trash. Please try again.";
+      this.error = t("err_trash_failed");
     }
   }
 

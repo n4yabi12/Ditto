@@ -1,6 +1,7 @@
 <script>
   import { appState } from "$lib/stores/scan.svelte.js";
   import { fmt, basename } from "$lib/utils.js";
+  import { t } from "$lib/i18n.svelte.js";
   import ImageCard from "$lib/components/ImageCard.svelte";
 
   // Load thumbnails for all visible images reactively
@@ -24,7 +25,7 @@
         <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2">
           <polyline points="10 13 5 8 10 3"/>
         </svg>
-        New Scan
+        {t("new_scan")}
       </button>
       <span class="topbar-divider"></span>
       <span class="folder-label" title={appState.selectedFolder}>
@@ -36,23 +37,23 @@
     </div>
 
     <div class="topbar-stats">
-      <span class="stat-pill"><strong>{appState.groups.length}</strong>&nbsp;{appState.groups.length === 1 ? 'group' : 'groups'}</span>
-      <span class="stat-pill"><strong>{appState.totalDuplicates}</strong>&nbsp;{appState.totalDuplicates === 1 ? 'duplicate' : 'duplicates'}</span>
+      <span class="stat-pill"><strong>{appState.groups.length}</strong>&nbsp;{appState.groups.length === 1 ? t('group') : t('groups')}</span>
+      <span class="stat-pill"><strong>{appState.totalDuplicates}</strong>&nbsp;{appState.totalDuplicates === 1 ? t('duplicate') : t('duplicates')}</span>
       {#if appState.totalSelected > 0}
-        <span class="stat-pill accent"><strong>{appState.totalSelected}</strong>&nbsp;selected ({fmt(appState.wasted)})</span>
+        <span class="stat-pill accent"><strong>{appState.totalSelected}</strong>&nbsp;{t("selected")} ({fmt(appState.wasted)})</span>
       {/if}
     </div>
 
     <div class="topbar-right">
       <!-- Sort selector -->
       <select class="sort-select" bind:value={appState.sortKey} title="Sort images within groups">
-        <option value="modified">Sort: Date</option>
-        <option value="resolution">Sort: Resolution</option>
-        <option value="size">Sort: File Size</option>
-        <option value="name">Sort: Name</option>
+        <option value="modified">{t("sort_date")}</option>
+        <option value="resolution">{t("sort_resolution")}</option>
+        <option value="size">{t("sort_size")}</option>
+        <option value="name">{t("sort_name")}</option>
       </select>
-      <button class="btn-sm" onclick={() => appState.autoSelectAll()}>Auto-select All</button>
-      <button class="btn-sm" onclick={() => appState.clearAll()}>Clear All</button>
+      <button class="btn-sm" onclick={() => appState.autoSelectAll()}>{t("auto_select_all")}</button>
+      <button class="btn-sm" onclick={() => appState.clearAll()}>{t("clear_all")}</button>
     </div>
   </header>
 
@@ -64,8 +65,8 @@
           <circle cx="24" cy="24" r="20"/>
           <polyline points="14 24 21 31 34 17"/>
         </svg>
-        <p>No duplicate photos found.</p>
-        <button class="btn-primary" onclick={() => (appState.view = "home")}>Scan Another Folder</button>
+        <p>{t("no_duplicates")}</p>
+        <button class="btn-primary" onclick={() => (appState.view = "home")}>{t("scan_another")}</button>
       </div>
     {:else}
       {#each appState.groups as g (g.id)}
@@ -73,12 +74,12 @@
         <section class="group">
           <div class="group-header">
             <span class="group-title">
-              Group {g.id + 1}
-              <span class="group-count">{g.images.length} {g.images.length === 1 ? 'image' : 'images'}</span>
+              {t("group")} {g.id + 1}
+              <span class="group-count">{g.images.length} {g.images.length === 1 ? t('image') : t('images')}</span>
             </span>
             <div class="group-actions">
-              <button class="btn-xs" onclick={() => appState.autoSelect(g.id)}>Auto-select</button>
-              <button class="btn-xs muted" onclick={() => appState.clearGroupSelection(g.id)}>Clear</button>
+              <button class="btn-xs" onclick={() => appState.autoSelect(g.id)}>{t("auto_select")}</button>
+              <button class="btn-xs muted" onclick={() => appState.clearGroupSelection(g.id)}>{t("clear")}</button>
             </div>
           </div>
 
@@ -87,8 +88,8 @@
               <svg viewBox="0 0 16 16" width="13" height="13" fill="currentColor" style="flex-shrink:0">
                 <path d="M2 2h5v12H2zm7 0h5v12h-5z"/>
               </svg>
-              <span>Now click another image to compare side by side</span>
-              <button class="btn-link" onclick={() => { appState.compareFirst = null; }}>Cancel</button>
+              <span>{t("compare_hint")}</span>
+              <button class="btn-link" onclick={() => { appState.compareFirst = null; }}>{t("cancel")}</button>
             </div>
           {/if}
 
@@ -106,16 +107,16 @@
   {#if appState.totalSelected > 0}
   <footer class="bottombar">
     <div class="bottombar-info">
-      <strong>{appState.totalSelected}</strong> files selected &nbsp;·&nbsp; {fmt(appState.wasted)} reclaimable
+      <strong>{appState.totalSelected}</strong> {t("files_selected")} &nbsp;·&nbsp; {fmt(appState.wasted)} {t("reclaimable")}
     </div>
     <div class="bottombar-actions">
       <button
         class="btn-delete"
         onclick={() => (appState.confirmingDelete = true)}
       >
-        Move to Trash
+        {t("move_to_trash")}
       </button>
-      <button class="btn-ghost" onclick={() => appState.clearAll()}>Clear All</button>
+      <button class="btn-ghost" onclick={() => appState.clearAll()}>{t("clear_all")}</button>
     </div>
   </footer>
   {/if}
@@ -138,17 +139,17 @@
     onclick={(e) => e.stopPropagation()}
     onkeydown={(e) => e.stopPropagation()}
   >
-    <h3>Move to Trash</h3>
+    <h3>{t("move_to_trash")}</h3>
     <p>
-      <strong>{appState.totalSelected}</strong> {appState.totalSelected === 1 ? "file" : "files"} will be moved to trash.
-      You can restore them from the trash if needed.
+      <strong>{appState.totalSelected}</strong> {t("files_will_be_trashed")}
+      {t("trash_restore_hint")}
     </p>
     <div class="dialog-btns">
-      <button class="btn-ghost" onclick={() => (appState.confirmingDelete = false)}>Cancel</button>
+      <button class="btn-ghost" onclick={() => (appState.confirmingDelete = false)}>{t("cancel")}</button>
       <button
         class="btn-delete"
         onclick={() => appState.deleteSelected()}
-      >Move to Trash</button>
+      >{t("move_to_trash")}</button>
     </div>
   </div>
 </div>

@@ -1,6 +1,7 @@
 <script>
   import { appState } from "$lib/stores/scan.svelte.js";
   import { fmt, fmtDate, basename, fileManagerLabel } from "$lib/utils.js";
+  import { t } from "$lib/i18n.svelte.js";
 
   let { img, groupId } = $props();
 
@@ -52,7 +53,7 @@
           checked={selected}
           onchange={() => appState.toggleSelect(groupId, img.path)}
         />
-        {selected ? "Marked" : "Mark"}
+        {selected ? t("marked") : t("mark")}
       </label>
       <div class="action-btns">
         <button class="btn-link" onclick={() => appState.revealInFinder(img.path)}>
@@ -61,7 +62,7 @@
         <button
           class="btn-link {isCompareFirst ? 'compare-active' : ''}"
           onclick={() => appState.pickCompare(img, groupId)}
-        >{isCompareFirst ? "Cancel" : "Compare"}</button>
+        >{isCompareFirst ? t("cancel") : t("compare")}</button>
       </div>
     </div>
   </div>

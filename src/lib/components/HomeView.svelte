@@ -1,5 +1,6 @@
 <script>
-  import { appState, getSensitivityInfo, SENSITIVITY_LABELS } from "$lib/stores/scan.svelte.js";
+  import { appState, getSensitivityInfo } from "$lib/stores/scan.svelte.js";
+  import { t, i18n, LOCALES } from "$lib/i18n.svelte.js";
 </script>
 
 <div class="home">
@@ -14,9 +15,9 @@
       </svg>
     </div>
     <h1>Ditto</h1>
-    <p class="tagline">Find and remove duplicate photos</p>
+    <p class="tagline">{t("tagline")}</p>
 
-    <div class="field-label">Folder to scan</div>
+    <div class="field-label">{t("folder_to_scan")}</div>
     <button class="folder-row" onclick={() => appState.pickFolder()}>
       <svg viewBox="0 0 20 20" width="16" height="16" fill="currentColor">
         <path d="M2 6a2 2 0 012-2h3.586a1 1 0 01.707.293L9.707 5.707A1 1 0 0010.414 6H16a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
@@ -24,12 +25,12 @@
       {#if appState.selectedFolder}
         <span class="folder-path">{appState.selectedFolder}</span>
       {:else}
-        <span class="folder-hint">Click to select a folder…</span>
+        <span class="folder-hint">{t("folder_hint")}</span>
       {/if}
-      <span class="folder-btn-label">Change</span>
+      <span class="folder-btn-label">{t("change")}</span>
     </button>
 
-    <div class="field-label" style="width:100%; margin-top:2px">Detection Sensitivity</div>
+    <div class="field-label" style="width:100%; margin-top:2px">{t("detection_sensitivity")}</div>
     <div class="sensitivity-wrap">
       <div class="sensitivity-header">
         <span class="sensitivity-label-text">{getSensitivityInfo(appState.sensitivity).label}</span>
@@ -44,25 +45,25 @@
         title={getSensitivityInfo(appState.sensitivity).desc}
       />
       <div class="sensitivity-ticks">
-        <span>Strict</span>
-        <span>Loose</span>
+        <span>{t("strict")}</span>
+        <span>{t("loose")}</span>
       </div>
       <p class="sensitivity-desc">{getSensitivityInfo(appState.sensitivity).desc}</p>
     </div>
 
-    <div class="field-label" style="width:100%; margin-top:2px">File Types</div>
+    <div class="field-label" style="width:100%; margin-top:2px">{t("file_types")}</div>
     <div class="filetype-group">
       {#each [
-        { value: "all",     label: "All",      desc: "JPEG, PNG, RAW, and more" },
-        { value: "non_raw", label: "Non-RAW",  desc: "JPEG, PNG, TIFF, WebP…"   },
-        { value: "raw",     label: "RAW Only", desc: "CR2, CR3, NEF, ARW…"      },
+        { value: "all",     labelKey: "all",      descKey: "all_desc" },
+        { value: "non_raw", labelKey: "non_raw",   descKey: "non_raw_desc" },
+        { value: "raw",     labelKey: "raw_only",  descKey: "raw_only_desc" },
       ] as opt}
         <button
           class="filetype-btn {appState.fileTypes === opt.value ? 'active' : ''}"
           onclick={() => (appState.fileTypes = /** @type {"all"|"non_raw"|"raw"} */ (opt.value))}
-          title={opt.desc}
+          title={t(opt.descKey)}
         >
-          {opt.label}
+          {t(opt.labelKey)}
         </button>
       {/each}
     </div>
@@ -72,8 +73,17 @@
     {/if}
 
     <button class="btn-primary" onclick={() => appState.startScan()} disabled={!appState.selectedFolder}>
-      Start Scan
+      {t("start_scan")}
     </button>
+
+    <div class="lang-row">
+      {#each LOCALES as loc}
+        <button
+          class="lang-btn {i18n.locale === loc ? 'active' : ''}"
+          onclick={() => i18n.setLocale(loc)}
+        >{t("lang_" + loc)}</button>
+      {/each}
+    </div>
   </div>
 </div>
 
@@ -265,4 +275,30 @@
   .btn-primary:hover:not(:disabled) { opacity: .88; transform: translateY(-1px); }
   .btn-primary:active:not(:disabled) { transform: none; }
   .btn-primary:disabled { opacity: .35; cursor: not-allowed; }
+
+  .lang-row {
+    display: flex;
+    gap: 4px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .lang-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text-3);
+    font-size: .68rem;
+    padding: 2px 8px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .lang-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .lang-btn.active {
+    background: var(--accent-bg);
+    border-color: var(--accent);
+    color: var(--accent);
+    font-weight: 600;
+  }
 </style>

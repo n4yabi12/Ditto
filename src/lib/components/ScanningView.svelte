@@ -1,23 +1,24 @@
 <script>
   import { appState } from "$lib/stores/scan.svelte.js";
+  import { t, i18n } from "$lib/i18n.svelte.js";
 </script>
 
 <div class="scanning">
   <div class="scan-wrap">
     <div class="scan-spinner"></div>
     <div class="scan-texts">
-      <p class="scan-phase">{appState.scanProgress.phase}</p>
+      <p class="scan-phase">{i18n.translatePhase(appState.scanProgress.phase)}</p>
       <p class="scan-count">
         {appState.scanProgress.total > 0
-          ? `${appState.scanProgress.current.toLocaleString()} / ${appState.scanProgress.total.toLocaleString()} images`
-          : "Searching for images…"}
+          ? `${appState.scanProgress.current.toLocaleString()} / ${appState.scanProgress.total.toLocaleString()} ${t("images")}`
+          : t("searching_images")}
       </p>
     </div>
     <div class="prog-track">
       <div class="prog-fill" style="width:{appState.pct}%"></div>
     </div>
     <p class="prog-pct">{appState.pct}%</p>
-    <button class="btn-cancel-scan" onclick={() => appState.cancelScan()}>Cancel</button>
+    <button class="btn-cancel-scan" onclick={() => appState.cancelScan()}>{t("cancel")}</button>
   </div>
 </div>
 

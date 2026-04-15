@@ -1,6 +1,7 @@
 <script>
   import { appState } from "$lib/stores/scan.svelte.js";
   import { fmt, fmtDate, basename, fileManagerLabel } from "$lib/utils.js";
+  import { t } from "$lib/i18n.svelte.js";
 </script>
 
 {#if appState.compareModal}
@@ -20,7 +21,7 @@
     onkeydown={(e) => e.stopPropagation()}
   >
     <div class="compare-header">
-      <span class="compare-title">Compare</span>
+      <span class="compare-title">{t("compare")}</span>
       <button class="preview-close" onclick={() => appState.closeCompare()}>✕</button>
     </div>
     <div class="compare-body">
@@ -57,7 +58,7 @@
                   checked={isMarked}
                   onchange={() => appState.toggleSelect(panel.groupId, panel.img.path)}
                 />
-                {isMarked ? "Marked for deletion" : "Mark for deletion"}
+                {isMarked ? t("marked_for_deletion") : t("mark_for_deletion")}
               </label>
             </div>
           </div>
