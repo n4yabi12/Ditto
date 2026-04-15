@@ -1,5 +1,10 @@
 # Ditto
 
+![Release](https://img.shields.io/github/v/release/n4yabi12/Ditto?style=flat&color=6366f1)
+![Downloads](https://img.shields.io/github/downloads/n4yabi12/Ditto/total?style=flat&color=10b981)
+![Last Commit](https://img.shields.io/github/last-commit/n4yabi12/Ditto?style=flat&color=f59e0b)
+![License](https://img.shields.io/badge/license-MIT-8b5cf6?style=flat)
+
 A desktop application for detecting and removing duplicate photos. Built with Tauri v2 and SvelteKit.
 
 ---
