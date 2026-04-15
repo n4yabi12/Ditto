@@ -27,6 +27,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get previous tag
+        id: prev_tag
+        shell: bash
+        run: |
+          PREV=$(git tag --sort=-v:refname | grep '^v' | sed -n '2p')
+          echo "tag=${PREV:-v0.0.0}" >> "$GITHUB_OUTPUT"
 
       - name: Install Linux dependencies
         if: matrix.platform == 'ubuntu-24.04'
@@ -58,7 +67,8 @@ jobs:
         with:
           tagName: v__VERSION__
           releaseName: "Ditto v__VERSION__"
-          releaseDraft: true
+          releaseBody: "**Full Changelog**: https://github.com/n4yabi12/Ditto/compare/${{ steps.prev_tag.outputs.tag }}...v__VERSION__"
+          releaseDraft: false
           prerelease: false
           args: --target ${{ matrix.target }} --bundles ${{ matrix.bundles }}
           includeUpdaterJson: false
