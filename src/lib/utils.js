@@ -31,8 +31,14 @@ export function basename(path) {
 }
 
 /**
- * True when running on Windows (detected via WebView user-agent).
- * Used to show "Explorer" instead of "Finder" in the UI.
+ * Platform detection via WebView user-agent.
+ * Used to show the correct file manager name in the UI.
  */
 export const isWindows =
   typeof navigator !== "undefined" && navigator.userAgent.includes("Windows");
+
+export const isLinux =
+  typeof navigator !== "undefined" && navigator.userAgent.includes("Linux");
+
+/** Label for the "reveal in file manager" button. */
+export const fileManagerLabel = isWindows ? "Explorer" : isLinux ? "Files" : "Finder";

@@ -1,6 +1,6 @@
 <script>
   import { appState } from "$lib/stores/scan.svelte.js";
-  import { fmt, fmtDate, basename, isWindows } from "$lib/utils.js";
+  import { fmt, fmtDate, basename, fileManagerLabel } from "$lib/utils.js";
 </script>
 
 {#if appState.compareModal}
@@ -49,7 +49,7 @@
             </div>
             <div class="compare-actions">
               <button class="btn-link" onclick={() => appState.revealInFinder(panel.img.path)}>
-                {isWindows ? "Explorer" : "Finder"}
+                {fileManagerLabel}
               </button>
               <label class="check-label {isMarked ? 'checked' : ''}">
                 <input

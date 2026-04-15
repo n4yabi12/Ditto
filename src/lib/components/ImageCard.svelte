@@ -1,6 +1,6 @@
 <script>
   import { appState } from "$lib/stores/scan.svelte.js";
-  import { fmt, fmtDate, basename, isWindows } from "$lib/utils.js";
+  import { fmt, fmtDate, basename, fileManagerLabel } from "$lib/utils.js";
 
   let { img, groupId } = $props();
 
@@ -56,7 +56,7 @@
       </label>
       <div class="action-btns">
         <button class="btn-link" onclick={() => appState.revealInFinder(img.path)}>
-          {isWindows ? "Explorer" : "Finder"}
+          {fileManagerLabel}
         </button>
         <button
           class="btn-link {isCompareFirst ? 'compare-active' : ''}"

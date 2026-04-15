@@ -53,6 +53,19 @@ RAW files are displayed using their embedded JPEG preview, which preserves origi
 - [Rust](https://rustup.rs) (stable toolchain, MSVC target)
 - [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) — select the "Desktop development with C++" workload
 
+### Linux (untested)
+
+> **Note:** Linux support has been implemented but has not been tested. Bug reports and feedback are welcome.
+
+- A modern Linux distribution with WebKitGTK 4.1+
+- [Node.js](https://nodejs.org) 18+
+- [Rust](https://rustup.rs) (stable toolchain)
+- System dependencies (Debian/Ubuntu):
+
+  ```bash
+  sudo apt install libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+  ```
+
 ---
 
 ## Development
@@ -132,3 +145,9 @@ src-tauri/
 4. Previously seen files are served from a hash cache (keyed by path + size + mtime) and skipped entirely. The cache is capped at 50,000 entries.
 5. Images are grouped with complete-linkage clustering: an image joins a group only if it is within the sensitivity threshold of every existing member, preventing false-positive chaining.
 6. Groups with two or more images are shown in the results view, sorted by group size. The highest-resolution image in each group is marked as Best.
+
+---
+
+## Acknowledgements
+
+This project was built with the assistance of AI (Claude, Anthropic). All code has been reviewed and tested by the maintainer.

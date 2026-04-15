@@ -666,6 +666,35 @@ async fn reveal_in_finder(path: String) -> Result<(), String> {
         .spawn()
         .map_err(|e| e.to_string())?;
 
+    #[cfg(target_os = "linux")]
+    {
+        // Try D-Bus FileManager1 interface first (works with most modern file managers:
+        // Nautilus, Dolphin, Thunar, Nemo, Caja, etc.)
+        let dbus_result = std::process::Command::new("dbus-send")
+            .args([
+                "--session",
+                "--dest=org.freedesktop.FileManager1",
+                "--type=method_call",
+                "/org/freedesktop/FileManager1",
+                "org.freedesktop.FileManager1.ShowItems",
+                &format!("array:string:file://{}", path),
+                "string:",
+            ])
+            .status();
+
+        if !dbus_result.map(|s| s.success()).unwrap_or(false) {
+            // Fallback: open the parent directory with xdg-open
+            let parent = std::path::Path::new(&path)
+                .parent()
+                .map(|p| p.to_string_lossy().to_string())
+                .unwrap_or_else(|| path.clone());
+            std::process::Command::new("xdg-open")
+                .arg(&parent)
+                .spawn()
+                .map_err(|e| e.to_string())?;
+        }
+    }
+
     Ok(())
 }
 
